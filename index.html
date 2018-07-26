@@ -1,0 +1,358 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8" />
+<head>
+   <title></title>
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+   <style>
+   	body { background: rgba(133,146,153,1); }
+
+   	body, td, div, table, tr, tbody {
+   		-webkit-touch-callout: none;
+	    -webkit-user-select: none;
+	    -khtml-user-select: none;
+	    -moz-user-select: none;
+	    -ms-user-select: none;
+	    user-select: none;
+   	}
+
+   	td {
+   		text-align: center;
+   		vertical-align: middle;
+   		color: white;
+   	}
+
+	.nes-controller {
+	  position: absolute;
+	  top: 1em;
+	  left: 1em;
+	  right: 1em;
+	  bottom: 1em;
+	  background: rgba(91,108,123,1);
+	  background-size: cover;
+	  border-top-width: 2em;
+	  border-radius: 0.2em;
+	  box-shadow:
+	    inset 0 0 0 0.5em rgba(224,224,225,1),
+	    inset 0 1.5em 0 rgba(224,224,225,1),
+	    0 0 10em rgba(0,0,0,0.2),
+	    0 4em 8em rgba(0,0,0,0.2);
+	    /*inset 13.125em 0 0 -1em rgba(0,0,0,0.2),*/
+	}
+
+	.d-pad {
+	    position: absolute;
+	    top: 3.75em;
+	    left: 2.5em;
+	    width: 8.75em;
+	    height: 8.75em;
+	    background: rgba(56,61,66,1);
+	    border-radius: 0.15em;
+	    box-shadow: 0 0 0 0.25em rgba(178,178,179,1);
+	}
+
+	.select, .start {
+	  position: absolute;
+	  top: 6.75em;
+	  left: 14.65em;
+	  width: 3.5em;
+	  height: 2.5em;
+	  background: rgba(178,178,179,1);
+	  border-radius: 0.25em 0 0 0.25em;
+	}
+
+	.start {
+	  left: 18.15em;
+	  background: rgba(224,224,225,1);
+	  border-radius: 0 0.25em 0.25em 0;
+	}
+
+	.select:before, .start:before {
+	  content: '';
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  display: block;
+	  width: 2.25em;
+	  height: 0.75em;
+	  margin-left: 0.15em;
+	  background: rgba(56,61,66,0.75);
+	  border-radius: 0.5em;
+	  box-shadow: inset 3.125em 0 0 -2em rgba(0,0,0,0.2);
+	  -webkit-transform: translate(-50%,-50%);
+	      -ms-transform: translate(-50%,-50%);
+	          transform: translate(-50%,-50%);
+	}
+	.start:before { margin-left: -0.15em; }
+
+	.select:after, .start:after {
+	  content: '';
+	  position: absolute;
+	  top: -1.75em;
+	  display: block;
+	  width: 100%;
+	  height: 1.25em;
+	  color: rgba(133,146,153,1);
+	  background: rgba(133,146,153,1);
+	  border-radius: 0.25em 0 0 0.25em;
+	  box-shadow:
+	    -0.5em 5.25em 0 -0.5em rgba(178,178,179,1),
+	    0.5em 5.25em 0 -0.5em rgba(178,178,179,1),
+	    0 4.75em,
+	    0 -1.75em,
+	    0 -3.5em,
+	    -0.25em -3.75em 0 -0.25em;
+	}
+	.start:after {
+	  color: rgba(154,167,175,1);
+	  background: rgba(154,167,175,1);
+	  border-radius: 0 0.25em 0.25em 0;
+	  box-shadow:
+	    -0.5em 5.25em 0 -0.5em rgba(224,224,225,1),
+	    0.5em 5.25em 0 -0.5em rgba(224,224,225,1),
+	    0 4.75em,
+	    0 -1.75em,
+	    0 -3.5em,
+	    0.25em -3.75em 0 -0.25em;
+	}
+
+	.b-button, .a-button {
+	    position: absolute;
+	    top: 5.5em;
+	    right: 9em;
+	    width: 6em;
+	    height: 6em;
+	    background: rgba(224,224,225,1);
+	    border-radius: 0.25em;
+	}
+
+	.a-button {
+	  right: 2.5em;
+	}
+
+	.b-button:before, .a-button:before {
+	    content: '';
+	    display: block;
+	    width: 5.25em;
+	    height: 5.25em;
+	    margin: 0.375em;
+	    background: rgba(214,73,128,1);
+	    border-radius: 50%;
+	    box-shadow: inset 15.125em 0 0 -14em rgba(0,0,0,0.2);
+	}
+   </style>
+   <script>
+   		var connection = null;
+   		document.addEventListener('DOMContentLoaded', function(event){
+
+			connection = new WebSocket('ws://192.168.15.2:2033');
+		   	connection.onopen = function () {
+			  //console.log("conected.") // Send the message 'Ping' to the server
+			};
+/////***********************
+
+			var aButtton = document.getElementById('a-button');
+			aButtton.addEventListener('touchstart', function(event) {  
+			  connection.send("65");
+			});
+
+			var bButtton = document.getElementById('b-button');
+			bButtton.addEventListener('touchstart', function(event) {  
+			  connection.send("66");
+			});
+
+			var startButtton = document.getElementById('start');
+			startButtton.addEventListener('touchstart', function(event) {  
+			  connection.send("113");
+			});
+
+			var selectButtton = document.getElementById('select');
+			selectButtton.addEventListener('touchstart', function(event) {  
+			  connection.send("113");
+			});
+
+
+/////***********************
+			/*var tlButton = document.getElementById('tl');
+			tlButton.addEventListener('touchstart', function(event) {  
+			});
+
+			var tcButton = document.getElementById('tc');
+			tcButton.addEventListener('touchstart', function(event) {  
+			  
+			});
+
+			var trButton = document.getElementById('tr');
+			trButton.addEventListener('touchstart', function(event) {  
+			});
+
+			var mlButton = document.getElementById('ml');
+			mlButton.addEventListener('touchstart', function(event) {  
+			  
+			});
+
+			var mcButton = document.getElementById('mc');
+			mcButton.addEventListener('touchstart', function(event) {  
+			});
+
+			var mrButton = document.getElementById('mr');
+			mrButton.addEventListener('touchstart', function(event) {  
+			  
+			});
+
+			var blButton = document.getElementById('bl');
+			blButton.addEventListener('touchstart', function(event) {  
+			});
+
+			var bcButton = document.getElementById('bc');
+			bcButton.addEventListener('touchstart', function(event) {  
+			  
+			});
+
+			var brButton = document.getElementById('br');
+			brButton.addEventListener('touchstart', function(event) {  
+			});*/
+
+/////*******************************
+
+			var getIdOfTouchedElement = function(touchEvent)
+			{
+				var touch = touchEvent.changedTouches[0];
+				var element = document.elementFromPoint(touch.clientX, touch.clientY);
+				// this can return null
+				if (element !== null && 'id' in element)
+				{
+					return element.id;
+				}
+				else
+				{
+					return null;
+				}
+			};
+
+			var lastDPadPressed = null;
+
+			var dpadButton = function(id, pressFunction, unpressFunction){
+
+				dpad[id] = document.getElementById(id);
+				dpad[id].press = pressFunction;
+				dpad[id].unpress = unpressFunction;
+
+				// press handler for basic touchstart case
+				dpad[id].addEventListener('touchstart', function(event) {
+					lastDPadPressed = id;
+					event.preventDefault();
+					dpad[id].press();
+				});
+
+				// touch left the canvas, seems rarely called
+				dpad[id].addEventListener('touchleave', function(event) {
+					console.log('touchleave received, how novel');
+					event.preventDefault();
+					dpad[id].unpress();
+				});
+
+				// touch ended. The touch may have moved to another button, so handle that
+				dpad[id].addEventListener('touchend', function(event) {
+					event.preventDefault();
+					var elementBeingTouched = getIdOfTouchedElement(event);
+					if (elementBeingTouched in dpad)
+					{
+						dpad[elementBeingTouched].unpress();
+					}
+				});
+
+				dpad[id].addEventListener('touchmove', function(event) {
+					event.preventDefault();
+					var elementBeingTouched = getIdOfTouchedElement(event);
+					console.log(elementBeingTouched);
+					if (elementBeingTouched === lastDPadPressed)
+					{
+					// no change, no op
+					}
+					else if (elementBeingTouched in dpad) // verify we moved onto a dpad button
+					{
+						// unpress the last button if that's appropriate
+						if (lastDPadPressed in dpad)
+						{
+							dpad[lastDPadPressed].unpress();
+						}
+						// press the new button
+						dpad[elementBeingTouched].press();
+						lastDPadPressed = elementBeingTouched;
+					}
+					else // we moved off the dpad
+					{
+						// unpress the last button if that's appropriate
+						if (lastDPadPressed in dpad)
+						{
+							dpad[lastDPadPressed].unpress();
+						}
+						lastDPadPressed = null;
+					}
+				});
+
+				return dpad[id];
+			};
+
+			dpad = [];
+			
+			dpad['tl'] = dpadButton('tl', function(){}, function(){});
+			
+			dpad['tc'] = dpadButton('tc', function(){
+				connection.send("65");
+			}, function(){});
+
+			dpad['tr'] = dpadButton('tr', function(){}, function(){});
+			
+			dpad['ml'] = dpadButton('ml', function(){
+				connection.send("68");
+			}, function(){});
+
+			dpad['mc'] = dpadButton('mc', function(){}, function(){});
+
+			dpad['mr'] = dpadButton('mr', function(){
+				connection.send("67");
+			}, function(){});
+
+			dpad['bl'] = dpadButton('bl', function(){}, function(){});
+
+			dpad['bc'] = dpadButton('bc', function(){
+				connection.send("66");
+			}, function(){});
+
+			dpad['br'] = dpadButton('br', function(){}, function(){});
+			
+
+
+
+   		}, false);
+	   	
+   </script>
+</head>
+<body>
+   <div class="nes-controller">
+	  <table class="d-pad" id="d-pad" border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
+	    <tbody><tr>
+	      <td id="tl" width="33%">&nbsp;</td>
+	      <td id="tc" width="33%">▲</td>
+	      <td id="tr" width="33%">&nbsp;</td>
+	    </tr>
+	    <tr>
+	      <td id="ml">◄</td>
+	      <td id="mc">&nbsp;</td>
+	      <td id="mr">►</td>
+	    </tr>
+	    <tr>
+	      <td id="bl">&nbsp;</td>
+	      <td id="bc">▼</td>
+	      <td id="br">&nbsp;</td>
+	    </tr>
+	  </tbody></table>
+	  <div class="select" id="select"></div>
+	  <div class="start" id="start"></div>
+	  <div class="b-button" id="b-button"></div>
+	  <div class="a-button" id="a-button"></div>
+	</div>
+</body>
+</html>

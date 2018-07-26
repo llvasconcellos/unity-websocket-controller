@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title></title>
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+   <style>
+   	body { background: rgba(133,146,153,1); }
+
+	.nes-controller {
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  width: 26.25em;
+	  height: 11.25em;
+	  background: rgba(91,108,123,1);
+	  background-size: cover;
+	  border-top-width: 2em;
+	  border-radius: 0.2em;
+	  box-shadow:
+	    inset 13.125em 0 0 -1em rgba(0,0,0,0.2),
+	    inset 0 0 0 0.5em rgba(224,224,225,1),
+	    inset 0 1.5em 0 rgba(224,224,225,1),
+	    0 0 10em rgba(0,0,0,0.2),
+	    0 4em 8em rgba(0,0,0,0.2);
+	  -webkit-transform: translate(-50%,-50%);
+	      -ms-transform: translate(-50%,-50%);
+	          transform: translate(-50%,-50%);
+	}
+
+	.d-pad, .d-pad:before, .d-pad:after {
+	  content: '';
+	  position: absolute;
+	  top: 5.75em;
+	  left: 2em;
+	  display: block;
+	  width: 4.75em;
+	  height: 1.75em;
+	  background: rgba(56,61,66,1);
+	  border-radius: 0.15em;
+	  box-shadow: 0 0 0 0.25em rgba(178,178,179,1);
+	}
+	.d-pad:before {
+	  top: -1.5em;
+	  left: 1.5em;
+	  width: 1.75em;
+	  height: 4.75em;
+	  box-shadow:
+	    inset 0.875em 0 rgba(0,0,0,0.2),
+	    0 0 0 0.25em rgba(178,178,179,1);
+	}
+	.d-pad:after {
+	  top: 0;
+	  left: 0;
+	  box-shadow: inset 2.375em 0 rgba(0,0,0,0.2);
+	}
+
+	.select, .start {
+	  position: absolute;
+	  top: 6.75em;
+	  left: 8.65em;
+	  width: 3.5em;
+	  height: 2.5em;
+	  background: rgba(178,178,179,1);
+	  border-radius: 0.25em 0 0 0.25em;
+	}
+
+	.start {
+	  left: 12.15em;
+	  background: rgba(224,224,225,1);
+	  border-radius: 0 0.25em 0.25em 0;
+	}
+
+	.select:before, .start:before {
+	  content: '';
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  display: block;
+	  width: 2.25em;
+	  height: 0.75em;
+	  margin-left: 0.15em;
+	  background: rgba(56,61,66,0.75);
+	  border-radius: 0.5em;
+	  box-shadow: inset 3.125em 0 0 -2em rgba(0,0,0,0.2);
+	  -webkit-transform: translate(-50%,-50%);
+	      -ms-transform: translate(-50%,-50%);
+	          transform: translate(-50%,-50%);
+	}
+	.start:before { margin-left: -0.15em; }
+
+	.select:after, .start:after {
+	  content: '';
+	  position: absolute;
+	  top: -1.75em;
+	  display: block;
+	  width: 100%;
+	  height: 1.25em;
+	  color: rgba(133,146,153,1);
+	  background: rgba(133,146,153,1);
+	  border-radius: 0.25em 0 0 0.25em;
+	  box-shadow:
+	    -0.5em 5.25em 0 -0.5em rgba(178,178,179,1),
+	    0.5em 5.25em 0 -0.5em rgba(178,178,179,1),
+	    0 4.75em,
+	    0 -1.75em,
+	    0 -3.5em,
+	    -0.25em -3.75em 0 -0.25em;
+	}
+	.start:after {
+	  color: rgba(154,167,175,1);
+	  background: rgba(154,167,175,1);
+	  border-radius: 0 0.25em 0.25em 0;
+	  box-shadow:
+	    -0.5em 5.25em 0 -0.5em rgba(224,224,225,1),
+	    0.5em 5.25em 0 -0.5em rgba(224,224,225,1),
+	    0 4.75em,
+	    0 -1.75em,
+	    0 -3.5em,
+	    0.25em -3.75em 0 -0.25em;
+	}
+
+	.b-button, .a-button {
+	  position: absolute;
+	  top: 6.5em;
+	  right: 6em;
+	  width: 3em;
+	  height: 3em;
+	  background: rgba(224,224,225,1);
+	  border-radius: 0.25em;
+	}
+
+	.a-button {
+	  right: 2.5em;
+	}
+
+	.b-button:before, .a-button:before {
+	  content: '';
+	  display: block;
+	  width: 2.25em;
+	  height: 2.25em;
+	  margin: 0.375em;
+	  background: rgba(214,73,128,1);
+	  border-radius: 50%;
+	  box-shadow: inset 15.125em 0 0 -14em rgba(0,0,0,0.2);
+	}
+   </style>
+   <script>
+   		document.addEventListener('DOMContentLoaded', function(event){
+			var connection = new WebSocket('ws://192.168.225.121:2033');
+		   	connection.onopen = function () {
+			  console.log("conected.") // Send the message 'Ping' to the server
+			};
+			//var joy = document.getElementById("joy");
+			document.addEventListener("keyup", function(event){
+
+				var code = 0;
+
+				switch(event.keyCode){
+					case 38:
+						code = "65"; //up
+						break;
+					case 40:
+						code = "66"; //down
+						break;
+					case 37:
+						code = "68"; //left
+						break;
+					case 39:
+						code = "67"; //right
+						break;
+				}
+
+				connection.send(code);
+				//console.log(event.keyCode);
+			});
+
+
+
+
+
+			var aButtton = document.getElementById('a-button');
+
+			aButtton.addEventListener('touchstart', function(event) {  
+			  // change the state of the controls, e.g. start shooting
+			  console.log("aButtton");
+			});
+
+
+			var bButtton = document.getElementById('b-button');
+
+			bButtton.addEventListener('touchstart', function(event) {  
+			  // change the state of the controls, e.g. start shooting
+			  console.log("bButtton");
+			});
+
+
+			//.d-pad, .d-pad:before, .d-pad:after
+			var x = document.querySelector("#tl");
+
+			console.log(x);
+			console.dir(x);
+
+
+
+
+			var tlButton = document.getElementById('tl');
+			tlButton.addEventListener('touchstart', function(event) {  
+			  // change the state of the controls, e.g. start shooting
+			  console.log("tlButton");
+			});
+
+			var tcButton = document.getElementById('tc');
+			tcButton.addEventListener('touchstart', function(event) {  
+			  // change the state of the controls, e.g. start shooting
+			  console.log("tcButton");
+			});
+
+			var trButton = document.getElementById('tr');
+			trButton.addEventListener('touchstart', function(event) {  
+			  // change the state of the controls, e.g. start shooting
+			  console.log("trButton");
+			});
+
+			var mlButton = document.getElementById('ml');
+			mlButton.addEventListener('touchstart', function(event) {  
+			  connection.send("68");
+			});
+
+			var mcButton = document.getElementById('mc');
+			mcButton.addEventListener('touchstart', function(event) {  
+			  // change the state of the controls, e.g. start shooting
+			  console.log("mcButton");
+			});
+
+			var mrButton = document.getElementById('mr');
+			mrButton.addEventListener('touchstart', function(event) {  
+			  connection.send("67");
+			});
+
+			var blButton = document.getElementById('bl');
+			blButton.addEventListener('touchstart', function(event) {  
+			  // change the state of the controls, e.g. start shooting
+			  console.log("blButton");
+			});
+
+			var bcButton = document.getElementById('bc');
+			bcButton.addEventListener('touchstart', function(event) {  
+			  // change the state of the controls, e.g. start shooting
+			  console.log("bcButton");
+			});
+
+			var brButton = document.getElementById('br');
+			brButton.addEventListener('touchstart', function(event) {  
+			  // change the state of the controls, e.g. start shooting
+			  console.log("brButton");
+			});
+
+
+
+   		}, false);
+	   	
+   </script>
+</head>
+<body>
+   <div class="nes-controller">
+	  <div class="d-pad"><div id="dpad" style="
+		    width: 100%;
+		    height: 300%;
+		    z-index: 9999;
+		    margin-top: -36%;
+		">
+		  <table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
+		    <tbody><tr>
+		      <td id="tl" width="33%">&nbsp;</td>
+		      <td id="tc" width="33%">&nbsp;</td>
+		      <td id="tr" width="33%">&nbsp;</td>
+		    </tr>
+		    <tr>
+		      <td id="ml">&nbsp;</td>
+		      <td id="mc">&nbsp;</td>
+		      <td id="mr">&nbsp;</td>
+		    </tr>
+		    <tr>
+		      <td id="bl">&nbsp;</td>
+		      <td id="bc">&nbsp;</td>
+		      <td id="br">&nbsp;</td>
+		    </tr>
+		  </tbody></table>
+		</div>
+		</div>
+	  <div class="select"></div>
+	  <div class="start"></div>
+	  <div class="b-button" id="b-button"></div>
+	  <div class="a-button" id="a-button"></div>
+	</div>
+</body>
+</html>
